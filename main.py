@@ -17,10 +17,12 @@ for filepath in filepaths:
     pdf.set_font(family="Times", style="B", size=22)
     pdf.cell(w=0, h=10, txt=f"Invoice number: {invoice_number}", align="L", ln=1)
     pdf.cell(w=0, h=10, txt=f"Date: {date}", align="L", ln=1)
+    pdf.cell(w=0, h=10, txt="", ln=1)
 
     df = pd.read_excel(filepath, sheet_name="Sheet 1")
-
     columns = df.columns
+
+    # for table header
     columns = [each_item.replace('_', ' ').title() for each_item in columns]
     pdf.set_font(family="Times", size=12, style="B")
     pdf.cell(w=30, h=8, txt=columns[0], border=1)
@@ -29,6 +31,7 @@ for filepath in filepaths:
     pdf.cell(w=30, h=8, txt=columns[3], border=1)
     pdf.cell(w=25, h=8, txt=columns[4], border=1, ln=1)
 
+    # for table columns
     for index, row in df.iterrows():
         pdf.set_font(family="Times", size=12)
         pdf.cell(w=30, h=8, txt=str(row['product_id']), border=1)
@@ -37,5 +40,21 @@ for filepath in filepaths:
         pdf.cell(w=30, h=8, txt=str(row['price_per_unit']), border=1)
         pdf.cell(w=25, h=8, txt=str(row['total_price']), border=1, ln=1)
 
-    pdf.output(f"PDF_invoices/{filename}.pdf")
+    # calculate total price
+    total_sum = df['total_price'].sum()
 
+    pdf.set_font(family="Times", size=12)
+    pdf.cell(w=30, h=8, txt="", border=1)
+    pdf.cell(w=60, h=8, txt="", border=1)
+    pdf.cell(w=45, h=8, txt="", border=1)
+    pdf.cell(w=30, h=8, txt="", border=1)
+    pdf.cell(w=25, h=8, txt=str(total_sum), border=1, ln=1)
+    pdf.cell(w=0, h=10, txt="", ln=1)
+
+    pdf.set_font(family="Times", size=16)
+    pdf.cell(w=0, h=12, txt=f"Total Price is --- Rs. {total_sum}", ln=1)
+    pdf.cell(w=0, h=10, txt="", ln=1)
+    pdf.cell(w=30, h=20, txt="Thank you.", ln=1)
+    pdf.image('logo.png', w=40)
+
+    pdf.output(f"PDF_invoices/{filename}.pdf")
