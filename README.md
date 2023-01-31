@@ -1,3 +1,3 @@
-# Project Description
+# Description
 
-## This Project is to generate PDF Invoices using the data from Excel files
+## This Script generates PDF Invoices using the data from Excel files
